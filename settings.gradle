@@ -1,0 +1,2 @@
+include ':app', ':fileman'
+rootProject.name='FilemanLibrary'
