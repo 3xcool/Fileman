@@ -47,8 +47,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         //With Coroutine
         btn_sample_write.setOnClickListener {
+            //            writeAsyncPerson(createDummyPerson()) //without return
+
+            //with return and coroutine
             GlobalScope.launch {
-                //        val res = async {  coroWritePerson(createDummyPerson())}.await()
                 val res = withContext(Dispatchers.IO) {
                     writePerson(createDummyPerson())
                 }
@@ -62,30 +64,40 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         btn_sample_read.setOnClickListener {
             GlobalScope.launch {
-                //        val res = async {  coroReadPerson()}.await()
                 val res = withContext(Dispatchers.IO) { readPerson() }
-                withContext(context = Dispatchers.Main){
+                withContext(context = Dispatchers.Main) {
                     tv_sample.text = res ?: "File does not exist"
                 }
             }
             tv_sample.text = "reading..."
-
         }
     }
-
 
 
     private fun createDummyPerson(): Person {
         return Person("John", "Doe")
     }
 
+    //using simple lib methods
     private fun writePerson(person: Person): Boolean {
         val jsonString = Gson().toJson(person, Person::class.java)
         return Fileman.write(jsonString, this, mDrive, mFolder, person.name + Fileman.JSON_EXTENSION, false, true)
     }
 
     private fun readPerson(): String? {
-        Thread.sleep(3000) //just to show the power of coroutine
+        Thread.sleep(3000) //just to show that UI is not blocked
         return Fileman.read(this, mDrive, mFolder, "John" + Fileman.JSON_EXTENSION)
     }
+
+
+    /**
+     * Without result
+     */
+    private fun writeAsyncPerson(person: Person) {
+        val jsonString = Gson().toJson(person, Person::class.java)
+        Fileman.writeAsync(jsonString, this, mDrive, mFolder, person.name + Fileman.JSON_EXTENSION, false, true)
+    }
+
+
+
 }

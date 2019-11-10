@@ -4,6 +4,10 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.nio.charset.Charset
 
@@ -179,6 +183,17 @@ class Fileman {
       }
     }
 
+
+    /**
+     * Write file using coroutine without return
+     */
+    fun writeAsync(contentString: String, context: Context, drive: Int, folder: String, fileName: String, append: Boolean,  showLog: Boolean? = false){
+      GlobalScope.launch {
+        withContext(Dispatchers.IO){
+          write(contentString, context, drive, folder, fileName, append,  showLog)
+        }
+      }
+    }
 
 
 
