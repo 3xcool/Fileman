@@ -1,4 +1,4 @@
-package com.andrefilgs.fileman.enums
+package com.andrefilgs.fileman.model.enums
 
 enum class FilemanCommands( action:String) {
   WRITE(action = "Writing"),

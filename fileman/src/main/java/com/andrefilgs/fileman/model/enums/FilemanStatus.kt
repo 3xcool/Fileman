@@ -1,8 +1,6 @@
-package com.andrefilgs.fileman.enums
+package com.andrefilgs.fileman.model.enums
 
-/**
- * This is to allow user control for LiveData observer trigger
- */
+
 enum class FilemanStatus(val type:Int) {
   IDLE(-1),
   BLOCKED(10),

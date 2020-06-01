@@ -1,12 +1,10 @@
 package com.andrefilgs.fileman.auxiliar
 
-internal object FilemanInternalConstants {
+internal object FilemanConstants {
   
   internal val TIMEOUT = 30000L
   internal val TIMEOUT_STEP = 1000L
-  internal val TIMEOUT_MAX_STEPS =( TIMEOUT / TIMEOUT_STEP).toInt()
-  
-  var LOG_TAG = "Fileman"
+  // internal val TIMEOUT_MAX_STEPS =( TIMEOUT / TIMEOUT_STEP).toInt()
   
   const val DEFAULT_FILEMAN_FOLDER = "Fileman_Folder"
   const val DEFAULT_FILEMAN_FILE = "Fileman_File"
@@ -14,7 +12,7 @@ internal object FilemanInternalConstants {
   const val WORK_TAG_WRITE = "WORK_TAG_WRITE"
   const val WORK_TAG_FINAL = "WORK_TAG_FINAL"
   
-  const val WORK_KEY_FILEMAN_UNIQUE_ID = "WORK_KEY_FILEMAN_UNIQUE_ID" //Will be FileFullPath + Timestamp
+  const val WORK_KEY_FILEMAN_UNIQUE_ID = "WORK_KEY_FILEMAN_UNIQUE_ID"
   const val WORK_KEY_FILEMAN_COMMAND = "WORK_KEY_FILEMAN_COMMAND"
   const val WORK_KEY_IS_FINAL_WORKER = "WORK_KEY_IS_FINAL_WORKER"
   const val WORK_KEY_OUTPUT = "WORK_KEY_OUTPUT"

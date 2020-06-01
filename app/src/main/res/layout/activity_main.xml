@@ -8,7 +8,7 @@
   
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp"
     tools:context=".MainActivity">
     
@@ -18,33 +18,33 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Filename"
+        android:hint="@string/filename_hint"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="@string/filename_hint" />
     
       <EditText
         android:id="@+id/et_file_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:ems="10"
         android:inputType="textPersonName"
-        android:hint="File content"
+        android:hint="@string/file_content"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_filename" />
+        app:layout_constraintTop_toBottomOf="@id/et_filename"
+        android:autofillHints="foooo" />
     
       <Button
         android:id="@+id/btn_clear_output"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:text="Clear Output"
+        android:text="@string/clear_output"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete_file"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_file_content" />
@@ -54,8 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="Delete File"
+        android:text="@string/delete_file"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_clear_output"
         app:layout_constraintTop_toTopOf="@id/btn_clear_output" />
@@ -65,24 +64,137 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="8dp"
-      android:layout_marginRight="8dp"
       android:layout_marginTop="16dp"
-      android:text="WRITE"
-      app:layout_constraintEnd_toStartOf="@+id/btn_read"
+      android:text="@string/write"
+      app:layout_constraintEnd_toStartOf="@+id/btn_write_large"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/btn_clear_output" />
+  
+    <Button
+      android:id="@+id/btn_write_large"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="16dp"
+      android:text="@string/write_large_content"
+      app:layout_constraintStart_toEndOf="@+id/btn_write"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/btn_clear_output" />
+    
+    <Button
+      android:id="@+id/btn_lock_file"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:layout_marginTop="16dp"
+      android:text="@string/lock_file"
+      app:layout_constraintEnd_toStartOf="@+id/btn_unlock_file"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/btn_write" />
+  
+    <Button
+      android:id="@+id/btn_unlock_file"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:text="@string/unlock_file"
+      app:layout_constraintStart_toEndOf="@+id/btn_lock_file"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="@id/btn_lock_file" />
+  
+    <TextView
+      android:id="@+id/tv_timeout_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/timeout_value"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/tv_timeout_value"
+      app:layout_constraintTop_toBottomOf="@id/btn_lock_file"
+      />
+  
+    <TextView
+      android:id="@+id/tv_timeout_value"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:text=""
+      app:layout_constraintStart_toEndOf="@id/tv_timeout_label"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="@id/tv_timeout_label"
+      tools:text="5 seconds"
+      />
+    
+    <SeekBar
+      android:id="@+id/seekBar_timeout"
+      style="@style/Widget.AppCompat.SeekBar.Discrete"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="8dp"
+      android:max="10"
+      android:progress="5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/btn_multi_thread_write"
+      app:layout_constraintTop_toBottomOf="@id/tv_timeout_label"
+      />
+  
+    <SeekBar
+      android:id="@+id/seekBar_timeout2"
+      style="@style/Widget.AppCompat.SeekBar.Discrete"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="8dp"
+      android:max="10"
+      android:progress="5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/btn_multi_thread_write"
+      app:layout_constraintTop_toBottomOf="@id/seekBar_timeout"
+      />
+  
+    <Button
+      android:id="@+id/btn_multi_thread_write"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/multi_write"
+      app:layout_constraintStart_toEndOf="@+id/seekBar_timeout2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="@id/seekBar_timeout2"
+      app:layout_constraintTop_toTopOf="@id/seekBar_timeout" />
     
     <Button
       android:id="@+id/btn_read"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginLeft="8dp"
-      android:text="Read"
+      android:layout_marginTop="16dp"
+      android:text="@string/read"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/btn_write"
-      app:layout_constraintTop_toTopOf="@id/btn_write" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/seekBar_timeout2"
+      />
     
+  
+    <CheckBox
+      android:id="@+id/checkbox_append"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:checked="true"
+      android:text="@string/append"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/spinner_run_mode"
+      app:layout_constraintTop_toBottomOf="@id/btn_read"
+      />
+  
+    <Spinner
+      android:id="@+id/spinner_run_mode"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/checkbox_append"
+      app:layout_constraintBottom_toBottomOf="@id/checkbox_append"
+      app:layout_constraintTop_toTopOf="@id/checkbox_append" />
     
     <ProgressBar
       android:id="@+id/progressBar"
@@ -94,27 +206,19 @@
       app:layout_constraintBottom_toTopOf="@id/tv_output"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/checkBox" />
-    
+      app:layout_constraintTop_toBottomOf="@id/checkbox_append" />
+  
     <TextView
       android:id="@+id/tv_output"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
-      android:text="Hello World!"
+      android:layout_marginBottom="50dp"
+      android:text="@string/output"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/progressBar" />
   
-    <CheckBox
-      android:id="@+id/checkBox"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:checked="true"
-      android:text="Append"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/btn_write"
-      />
 
 
   </androidx.constraintlayout.widget.ConstraintLayout>

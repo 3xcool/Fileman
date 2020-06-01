@@ -4,7 +4,15 @@ import android.util.Log
 
 object FilemanLogger {
   
-  var showlog = true //todo 1000 set false
+  private var showlog = true
+  
+  fun enableLog(){
+    showlog = true
+  }
+  
+  fun disableLog(){
+    showlog = false
+  }
   
   private var LOG_TAG = "Fileman"
   
@@ -14,11 +22,11 @@ object FilemanLogger {
     LOG_TAG = tag
   }
   
-  fun d(message:String, tag:String?= LOG_TAG){
+  internal fun d(message:String, tag:String?= LOG_TAG){
     if(showlog) Log.d(tag, message)
   }
   
-  fun dbc(message:String, tag:String?= LOG_TAG){
+  internal fun dbc(message:String, tag:String?= LOG_TAG){
     if(showlog) Log.d(tag,"Design By Contract -> $message")
   }
   

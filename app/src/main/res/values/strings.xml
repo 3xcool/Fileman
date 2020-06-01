@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">FilemanLibrary</string>
+  <string name="read">Read</string>
+  <string name="write">WRITE</string>
+  <string name="delete_file">Delete File</string>
+  <string name="clear_output">Clear Output</string>
+  <string name="file_content">File content</string>
+  <string name="filename_hint">Filename (e.g. foo.json, foo.txt)</string>
+  <string name="append">Append</string>
+  <string name="async">Async</string>
+  <string name="output">Output</string>
+  <string name="write_large_content">Write large Content</string>
+  <string name="lock_file">Lock File</string>
+  <string name="unlock_file">Unlock File</string>
+  <string name="timeout_value">Timeout:</string>
+  <string name="multi_write">Multi Write</string>
 </resources>

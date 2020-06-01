@@ -3,8 +3,9 @@ package com.andrefilgs.fileman.model
 import android.os.Parcelable
 import androidx.work.WorkInfo
 import com.andrefilgs.fileman.auxiliar.*
-import com.andrefilgs.fileman.enums.FilemanCommands
-import com.andrefilgs.fileman.enums.FilemanStatus
+import com.andrefilgs.fileman.model.enums.FilemanCommands
+import com.andrefilgs.fileman.model.enums.FilemanStatus
+import com.andrefilgs.fileman.workmanager.FilemanManager
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -38,18 +39,21 @@ data class FilemanFeedback(
   
   companion object{
     
-    fun buildFromWorkInfo(workInfo: WorkInfo):FilemanFeedback{
+    internal fun buildFromWorkInfo(workInfo: WorkInfo):FilemanFeedback{
       val status = convertWorkStateToFilemanStatus(workInfo)
+      val filemanId = workInfo.getFilemanId()
       return FilemanFeedback(
         status = status.type,
         statusName = status.name,
-        message = workInfo.getOutput(),
+        // message = workInfo.getOutput(),
+        message = FilemanManager.getOutputMessage(filemanId),
         commandType = workInfo.getFilemanCommand(),
-        filemanId = workInfo.getFilemanId(),
+        filemanId = filemanId,
         isFinalWorker = workInfo.isFinalWork(),
         workerId = workInfo.id,
         filenameFullPath = workInfo.getFullPath(),
-        fileContent = workInfo.getFileContent(),
+        // fileContent = workInfo.getFileContent(),
+        fileContent = FilemanManager.getFileContent(filemanId),
         progress = workInfo.getProgressValue(),
         progressMessage = workInfo.getProgressMessage()
       )
@@ -57,7 +61,7 @@ data class FilemanFeedback(
   
   
     
-    fun convertWorkStateToFilemanStatus(workInfo: WorkInfo):FilemanStatus{
+    internal fun convertWorkStateToFilemanStatus(workInfo: WorkInfo):FilemanStatus{
       return when (workInfo.state){
         WorkInfo.State.SUCCEEDED -> FilemanStatus.SUCCEEDED
         WorkInfo.State.CANCELLED -> FilemanStatus.CANCELLED
@@ -69,7 +73,7 @@ data class FilemanFeedback(
       }
     }
     
-    fun buildOutputMessage(status:Boolean?, filemanCommand:String?, filenameFullPath: String?, filename:String, fileContent:String?, ellapsed:Long?):String{
+    internal fun buildOutputMessage(status:Boolean?, filemanCommand:String?, filenameFullPath: String?, filename:String, fileContent:String?, ellapsed:Long?):String{
       return when(filemanCommand){
         FilemanCommands.WRITE.name -> if (status.orDefault(false)) "File \"$filename\" has been written with content: \"$fileContent\" after $ellapsed milliseconds." else "ERROR: File \"$filenameFullPath\" has not been written after $ellapsed milliseconds."
         FilemanCommands.DELETE.name -> if (status.orDefault(false)) "File \"$filename\" has been deleted after $ellapsed milliseconds." else "ERROR: File \"$filenameFullPath\" has not been deleted after $ellapsed milliseconds."

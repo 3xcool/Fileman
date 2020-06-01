@@ -24,7 +24,6 @@ android {
 }
 
 dependencies {
-    def gson = '2.8.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -34,13 +33,5 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation "com.google.code.gson:gson:$gson"
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
-
     implementation project (':fileman')
-
-    //ViewModel
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha02'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 }

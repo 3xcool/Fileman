@@ -38,12 +38,12 @@ open class BaseViewModel : ViewModel() {
     delay(delayTime)
   }
   
-  suspend fun baseShowFeedbackMessage(message: String?) {
+  fun baseShowFeedbackMessage(message: String?) {
     _baseMessage.value = message
     message?.let { FilemanLogger.d(message) }
   }
 
-  suspend fun baseStartSomeCommand(message: String? = null, logAsTitle: Boolean? = true) {
+  suspend fun baseStartSomeCommand(message: String? = null) {
     FilemanLogger.d("Show loading")
     message?.let { baseShowFeedbackMessage(it) }
     _baseLoading.value = true

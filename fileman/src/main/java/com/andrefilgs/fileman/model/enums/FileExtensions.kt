@@ -1,4 +1,4 @@
-package com.andrefilgs.fileman.enums
+package com.andrefilgs.fileman.model.enums
 
 enum class FileExtensions (val type:String){
   JSON_EXTENSION (".json"),
