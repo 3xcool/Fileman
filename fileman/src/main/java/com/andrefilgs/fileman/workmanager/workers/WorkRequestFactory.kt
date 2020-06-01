@@ -20,7 +20,6 @@ class WorkRequestFactory {
      */
     fun buildFinalWorker(now:Long, cmd:String, filemanUniqueId:String, fileFullPath:String, fileContent:String?): OneTimeWorkRequest {
       val inputData = Data.Builder()
-      // inputData.putBoolean(FilemanInternalConstants.WORK_KEY_IS_FINAL_WORKER, true)
       inputData.putInitTime(now)
       inputData.putFilemanCommand(cmd)
       inputData.putFilemanUniqueID(filemanUniqueId)

@@ -114,13 +114,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
   private fun updateText(filemanFeedback: FilemanFeedback) {
     val current = tv_output.text
     
-    val workerId = filemanFeedback.workerId
-    val filemanId = filemanFeedback.filemanId
-    val statusName = filemanFeedback.statusName
-    val message = filemanFeedback.message
-    val progressMessage = filemanFeedback.progressMessage
-    val isFinalWorker = filemanFeedback.isFinalWorker
-    
     tv_output.text = "$current\n===============\nWorkerId: ${filemanFeedback.workerId}\nFilemanID: ${filemanFeedback.filemanId}\nState: ${filemanFeedback.statusName}\nMessage: ${filemanFeedback.message}\nProgress: ${filemanFeedback.progressMessage}\nIs Final: ${filemanFeedback.isFinalWorker}"
     
     if (filemanFeedback.status.orDefault(-1) > FilemanStatus.SUCCEEDED.type) {
@@ -164,13 +157,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
       beginCommand()
       
       //One test
-      // for(i in 0..30){
-      //   runFilemanCommand(FilemanCommands.WRITE)
-      // }
+      for(i in 0..30){
+        runFilemanCommand(FilemanCommands.WRITE)
+      }
       
       //Second test
-      mFileContent = buildLargeFileContent()
-      runFilemanCommand(FilemanCommands.WRITE)
+      // mFileContent = buildLargeFileContent()
+      // runFilemanCommand(FilemanCommands.WRITE)
     }
     
     btn_read.setOnClickListener {

@@ -3,6 +3,7 @@ package com.andrefilgs.fileman.workmanager
 import android.content.Context
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
+import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.andrefilgs.fileman.Fileman
@@ -87,7 +88,7 @@ class FilemanWM(context: Context, private val viewlifeCycleOwner: LifecycleOwner
         val finalWorkerRequest = WorkRequestFactory.buildFinalWorker(now, filemanCommand.name, filemanUniqueId, filenameFullPath, fileContent)
         observeWorkerById(coroutineWorkerRequest.id)
         observeWorkerById(finalWorkerRequest.id)
-        workManager.beginWith(coroutineWorkerRequest).then(finalWorkerRequest).enqueue()
+        workManager.beginUniqueWork(filemanUniqueId, ExistingWorkPolicy.REPLACE, coroutineWorkerRequest).then(finalWorkerRequest).enqueue()
         FilemanFeedback(FilemanStatus.ENQUEUE.type,FilemanStatus.ENQUEUE.name, "Running $filemanCommand", filemanCommand.name, filemanUniqueId, finalWorkerRequest.id,true,  filenameFullPath, fileContent)
       } catch (e: Exception) {
         FilemanLogger.dbc("${::runCommandLaunch.name} - ${e.message}")
@@ -139,7 +140,7 @@ class FilemanWM(context: Context, private val viewlifeCycleOwner: LifecycleOwner
         val finalWorkerRequest = WorkRequestFactory.buildFinalWorker(now,filemanCommand.name, filemanUniqueId, filenameFullPath, fileContent)
         observeWorkerById(coroutineWorkerRequest.id)
         observeWorkerById(finalWorkerRequest.id)
-        workManager.beginWith(coroutineWorkerRequest).then(finalWorkerRequest).enqueue()
+        workManager.beginUniqueWork(filemanUniqueId, ExistingWorkPolicy.REPLACE, coroutineWorkerRequest).then(finalWorkerRequest).enqueue()
         FilemanFeedback(FilemanStatus.ENQUEUE.type, FilemanStatus.ENQUEUE.name, "Running ${::runCommandAsync}", filemanCommand.name, filemanUniqueId,  finalWorkerRequest.id,true, filenameFullPath, fileContent)
       } catch (e: Exception) {
         FilemanLogger.dbc("${::runCommandAsync.name} - ${e.message}")
