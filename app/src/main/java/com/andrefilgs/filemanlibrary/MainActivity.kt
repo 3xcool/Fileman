@@ -18,7 +18,9 @@ import com.andrefilgs.fileman.workmanager.FilemanWM
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-//This is the simplest example for using Fileman Library (without using third libraries). Don't use it as an example for a good architecture solution.
+// This is the simplest example for using Fileman Library (without using DataBinding, Dagger, Coroutine).
+// Don't use it as an example for a good architecture solution.
+// The "sync" mode will freeze the UI for tutorial purpose.
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
   
   private val SYNC = "Sync"
@@ -29,9 +31,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
   
   private lateinit var filemanWM: FilemanWM
   
-  // private var mDrive = FilemanDrivers.SandBox.type   // 0 = store at SandBox
-  private var mDrive = FilemanDrivers.Internal.type    // 1 = store at Internal device storage
-  // private var mDrive = FilemanDrivers.External.type  // 2 = store at External device storage (SD card)
+  // private var mDrive = FilemanDrivers.SandBox.type    // 0 = store at SandBox
+  private var mDrive = FilemanDrivers.Internal.type // 1 = store at Internal device
+  // private var mDrive = FilemanDrivers.External.type   // 2 = store at External device (SD card)
   
   private var mFolder = "MyFolder"
   private var mFilename = ""

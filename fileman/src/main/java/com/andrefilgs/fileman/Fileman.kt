@@ -2,7 +2,6 @@ package com.andrefilgs.fileman
 
 import android.content.Context
 import com.andrefilgs.fileman.auxiliar.FilemanLogger
-import com.andrefilgs.fileman.workmanager.FilemanManager
 import java.io.*
 import java.nio.charset.Charset
 
@@ -22,7 +21,6 @@ class Fileman {
      * @param filename wih extension e.g. ".json"
      */
     fun write(fileContent: String, context: Context, drive: Int, folder: String, filename: String, append: Boolean): Boolean {
-      FilemanManager.lockFile(filename)
       val out = createOutputFile(context, drive, folder, filename, append) ?: return false
       
       return try {
@@ -42,7 +40,6 @@ class Fileman {
      * @param filename wih extension e.g. ".json"
      */
     fun read(context: Context, drive: Int, folder: String, filename: String): String? {
-      FilemanManager.lockFile(filename)
       val inputStream: InputStream? = getInputStreamFile(context, drive, folder, filename)
       
       var content: String? = null
