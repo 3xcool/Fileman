@@ -20,7 +20,10 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 
 
-class FilemanWM(context: Context, private val viewlifeCycleOwner: LifecycleOwner, private val statusFeedBackLevel:FilemanStatus?=FilemanStatus.IDLE) : BaseViewModel() {
+/**
+ * @param viewlifeCycleOwner may be null because you may not want to observe WorkManager LiveData
+ */
+class FilemanWM(context: Context, private val viewlifeCycleOwner: LifecycleOwner?=null, private val statusFeedBackLevel:FilemanStatus?=FilemanStatus.IDLE) : BaseViewModel() {
   
   private var workManager: WorkManager = WorkManager.getInstance(context)
   
@@ -45,7 +48,7 @@ class FilemanWM(context: Context, private val viewlifeCycleOwner: LifecycleOwner
   }
   
   private fun observeWorkerById(id: UUID) {
-    workManager.getWorkInfoByIdLiveData(id).observe(viewlifeCycleOwner, observeWorkById)
+    viewlifeCycleOwner?.let { workManager.getWorkInfoByIdLiveData(id).observe(viewlifeCycleOwner, observeWorkById) }
   }
   
   /**
