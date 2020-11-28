@@ -77,7 +77,7 @@ fun Boolean?.orDefault(default: Boolean = false): Boolean {
 
 fun Int?.orDefault(default: Int = 0): Int {
   if (this == null)
-    return 0
+    return default
   return this
 }
 
