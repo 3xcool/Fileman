@@ -7,23 +7,11 @@ I did this Library because I had a problem with multi threading writing/reading 
 
 
 # Dependency
-
-In build.graddle (Project)
-```kotlin
-  allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://jitpack.io' }
-    }
-  }
-```
-
     
 In build.graddle (app)
 ```kotlin
 dependencies {
-implementation 'com.github.3xcool:fileman:$LATEST_VERSION'
+implementation 'com.3xcool.utility:fileman:$LATEST_VERSION'
 }
 ```
 
