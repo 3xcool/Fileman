@@ -1,7 +1,9 @@
 package com.andrefilgs.fileman
 
 import android.content.Context
+import android.os.StatFs
 import com.andrefilgs.fileman.auxiliar.FilemanLogger
+import com.andrefilgs.fileman.utils.subLua
 import java.io.*
 import java.nio.charset.Charset
 
@@ -26,7 +28,7 @@ class Fileman {
       return try {
         out.write(fileContent.toByteArray())
         out.close()
-        FilemanLogger.d( "File $filename write with success.\nContent is $fileContent")
+        FilemanLogger.d("File $filename write with success.\nContent is $fileContent")
         true
       } catch (e: IOException) {
         e.printStackTrace()
@@ -52,7 +54,7 @@ class Fileman {
           inputStream.close()
           val charset: Charset = Charsets.UTF_8
           content = String(buffer, charset)
-          FilemanLogger.d( "File $filename read with success.\nFile content is: $content")
+          FilemanLogger.d("File $filename read with success.\nFile content is: $content")
         }
       } catch (ex: Exception) {
         ex.printStackTrace()
@@ -81,7 +83,7 @@ class Fileman {
       return System.currentTimeMillis()
     }
   
-    fun getFilenameFullPath(context: Context, driveInt: Int, folderStr: String,fileName: String):String?{
+    fun getFilenameFullPath(context: Context, driveInt: Int, folderStr: String, fileName: String):String?{
       val fullPath = getFullPath(context, driveInt, folderStr) ?: return null
       return "$fullPath/$fileName"
     }
@@ -178,10 +180,164 @@ class Fileman {
     }
     //endregion
     
+    
+    //region =================== Auxiliar Funs ===================
+  
+    // If targetLocation does not exist, it will be created.
+    @Throws(IOException::class)
+    fun copyToDirectory(sourceLocation: File, targetLocation: File): Boolean {
+      try {
+        if (sourceLocation.isDirectory) {
+          if (!targetLocation.exists() && !targetLocation.mkdirs()) {
+            throw IOException("Cannot create dir " + targetLocation.absolutePath)
+          }
+          val children = sourceLocation.list()
+          children?.let{
+            for (i in children.indices) {
+              copyToDirectory(File(sourceLocation, children[i]), File(targetLocation, children[i]))
+            }
+          }
+        } else {
+          // make sure the directory we plan to store exists
+          val directory = targetLocation.parentFile
+          if (directory != null && !directory.exists() && !directory.mkdirs()) {
+            throw IOException("Cannot create dir " + directory.absolutePath)
+          }
+          val input: InputStream = FileInputStream(sourceLocation)
+          val output: OutputStream = FileOutputStream(targetLocation)
+    
+          // Copy the bits from inputStream to outputStream
+          val buf = ByteArray(1024)
+          var len: Int
+          while (input.read(buf).also { len = it } > 0) {
+            output.write(buf, 0, len)
+          }
+          input.close()
+          output.close()
+        }
+      }catch (e:Exception){
+       e.printStackTrace()
+       return false
+      }
+      return true
+    }
+  
+    @Throws(IOException::class)
+    fun copyFileTo(context: Context, driveSrc: Int, folderSrc: String, filenameSrc: String, driveDest: Int, folderDest: String, filenameDest: String): Boolean {
+      val input: InputStream? = getInputStreamFile(context, driveSrc, folderSrc, filenameSrc)
+      val out: OutputStream? = createOutputFile(context, driveDest, folderDest, filenameDest, false)
+      if (input == null) {
+        throw IOException("Source path error")
+      } else if (out == null) {
+        throw IOException("Destination path error")
+      }
+      val buff = ByteArray(1024 * 1024)
+      var read = 0
+      try {
+        while (input.read(buff).also { read = it } > 0) {
+          out.write(buff, 0, read)
+        }
+      } catch (e: IOException) {
+        e.printStackTrace()
+        return false
+      } finally {
+        try {
+          input.close()
+          out.close()
+        } catch (e: IOException) {
+          e.printStackTrace()
+          return false
+        }
+      }
+      return true
+    }
+    
+  
+    fun getFile(context: Context, drive: Int, folderStr: String, fileName: String): File? {
+      val folder: File? = getFolder(context, drive, folderStr)
+      return if (folder != null) {
+        File(folder, fileName)
+      } else null
+    }
+  
+    fun deleteFile(context: Context, drive: Int, folderStr: String, fileName: String):Boolean{
+      val file = getFile(context, drive, folderStr, fileName) ?: return false
+      return file.delete()
+    }
+  
+    //https://stackoverflow.com/questions/2896733/how-to-rename-a-file-on-sdcard-with-android-application
+    fun renameFile(currentFile: File, newFilename: String) {
+      val currentLocation = currentFile.absolutePath.substringBeforeLast("/".single())
+      val newFile = File("$currentLocation/$newFilename")
+      currentFile.renameTo(newFile)
+    }
+  
+    fun removeTempExtension(currentFile: File, tempExtension: String): Boolean {
+      return try {
+        val newFilename = currentFile.name.subLua(1, currentFile.name.length - tempExtension.length)
+        renameFile(currentFile, newFilename)
+        true
+      }catch (e: Exception){
+        false
+      }
+    }
+  
+    fun dirSize(dir: File): Long {
+      if (dir.exists()) {
+        var result: Long = 0
+        val fileList = dir.listFiles()
+        fileList?.let{
+          fileList.forEach { file->
+            result += if (file.isDirectory) {
+              dirSize(file) // Recursive call if it's a directory
+            } else {
+              file.length() // Sum the file size in bytes
+            }
+          }
+        }
+        return result // return the file size
+      }
+      return 0
+    }
+  
+    fun getAvailableMemorySize(mPath: String): Long {
+      return try {
+        val path = File(mPath)
+        val stat = StatFs(path.path)
+        val blockSize = stat.blockSizeLong
+        val availableBlocks = stat.availableBlocksLong
+        availableBlocks * blockSize
+      } catch (e: java.lang.Exception) {
+        e.printStackTrace()
+        0
+      }
+    }
+  
+    fun getTotalMemorySize(mPath: String): Long {
+      return try {
+        val path = File(mPath)
+        val stat = StatFs(path.path)
+        val blockSize = stat.blockSizeLong
+        val totalBlocks = stat.blockCountLong
+        totalBlocks * blockSize
+      } catch (e: java.lang.Exception) {
+        e.printStackTrace()
+        0
+      }
+    }
+  
+    
+    fun checkSDCardExists(context: Context): Boolean {
+      //    return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+      val path = context.getExternalFilesDirs(null)
+      return path.size >= 2 && path[1] != null
+    }
+    
+    //endregion
   }
 }
 
-enum class FilemanDrivers (val type:Int){
+enum class FilemanDrivers(val type: Int){
   SandBox(0),  //Where the app is installed
   Internal(1), //Internal Device storage
   External(2)  //External Device storage (SD card)
