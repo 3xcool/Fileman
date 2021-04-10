@@ -1,48 +1,61 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
+
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
 
 def versionMajor = 2
-def versionMinor = 1
-def versionPatch = 5
+def versionMinor = 2
+def versionPatch = 2
 
+def localProperties = new Properties()
+localProperties.load(project.rootProject.file('mylocal.properties').newDataInputStream())
+
+//Maven Central
 ext {
-    bintrayRepo = 'maven' // Name of the Bintray repo you created
-    bintrayName = 'com.3xcool.utility:fileman' // Bintray package name
+    PUBLISH_GROUP_ID = 'com.3xcool'
+    PUBLISH_VERSION = "${versionMajor}.${versionMinor}.${versionPatch}"
+    PUBLISH_ARTIFACT_ID = 'fileman'
 
-    publishedGroupId = 'com.3xcool.utility' // Group ID of the SDK which will be added in implementation line of gradle
-    artifact = 'fileman' // Artifact ID of the SDK which will be added in implementation line of gradle
-    libraryVersion = '2.1.5' //versionMajor * 10000 + versionMinor * 100 + versionPatch  // Version of the library you created in Bintray
+    repoName = 'sonatype'
 
-    libraryName = 'Fileman' // It is generally the module name
-    libraryDescription = 'File Manager Library' // Small description of the library
+    libraryDescription = 'File Management Library'
+    libraryUrl = 'https://github.com/3xcool/Fileman'
 
-    siteUrl = 'https://github.com/3xcool/fileman'
-    gitUrl = 'https://github.com/3xcool/fileman'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 
     developerId = '3xcool'
     developerName = 'Andre Filgueiras'
     developerEmail = 'alg.filgueiras@gmail.com'
 
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-    //Bintray Credentials
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('mylocal.properties').newDataInputStream())
-
-    bintrayUsername = properties.getProperty('BINTRAY_USERNAME')
-    bintrayUserOrg = properties.getProperty('BINTRAY_ORG')
-    bintrayApiKey = properties.getProperty('BINTRAY_API_KEY')
+    gitConnection = 'scm:git:github.com/3xcool/Fileman.git'
+    developerConnection = 'scm:git:ssh://github.com/3xcool/Fileman.git'
+    scmUrl = 'https://github.com/3xcool/Fileman'
 }
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion "29.0.3"
 
+    signingConfigs {
+        release {
+            storeFile rootProject.file('filgs_key.keystore')
+            storePassword localProperties.getProperty("signing.password")
+            keyAlias localProperties.getProperty("signing.keyAlias")
+            keyPassword localProperties.getProperty("signing.password")
+        }
+
+        debug {
+            storeFile rootProject.file('filgs_key.keystore')
+            storePassword localProperties.getProperty("signing.password")
+            keyAlias localProperties.getProperty("signing.keyAlias")
+            keyPassword localProperties.getProperty("signing.password")
+        }
+    }
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -51,7 +64,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -61,19 +74,27 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.core:core-ktx:1.3.2'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //ViewModel
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     def work_version = "2.4.0"
@@ -109,4 +130,6 @@ task createJar(type: Copy) {
 
 createJar.dependsOn(deleteJar, build)
 
-apply from: 'bintray.script'
+//apply from: 'bintray.script'
+
+apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
