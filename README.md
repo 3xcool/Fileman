@@ -1,4 +1,8 @@
 # Fileman
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.3xcool/fileman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.3xcool/fileman)
+
+
 This is a utility API for File Management.
 
 If you don't need to use **WorkManager + Coroutine** for file CRUD, check FilemanLite repository first.
@@ -11,7 +15,7 @@ I did this Library because I had a problem with multi threading writing/reading 
 In build.graddle (app)
 ```kotlin
 dependencies {
-implementation 'com.3xcool.utility:fileman:$LATEST_VERSION'
+implementation 'com.3xcool:fileman:$LATEST_VERSION'
 }
 ```
 
